@@ -464,7 +464,6 @@ handler_exit:
 	return ret;
 }
 
-__attribute__((constructor))
 void swuforward_handler(void)
 {
 	register_handler("swuforward", install_remote_swu,

@@ -250,7 +250,6 @@ static int install_archive_image(struct img_type *img,
 	return ret;
 }
 
-__attribute__((constructor))
 void archive_handler(void)
 {
 	register_handler("archive", install_archive_image,
@@ -258,7 +257,6 @@ void archive_handler(void)
 }
 
 /* This is an alias for the parsers */
-__attribute__((constructor))
 void untar_handler(void)
 {
 	register_handler("tar", install_archive_image,

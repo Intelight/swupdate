@@ -248,7 +248,6 @@ static int adjust_volume(struct img_type *cfg,
 	return 0;
 }
 
-__attribute__((constructor))
 void ubi_handler(void)
 {
 	register_handler("ubivol", install_ubivol_image,

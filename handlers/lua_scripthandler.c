@@ -36,7 +36,7 @@
 #include "util.h"
 #include "lua_util.h"
 
-static void lua_handler(void);
+void lua_handler(void);
 
 static int start_lua_script(struct img_type *img, void *data)
 {
@@ -118,8 +118,7 @@ static int start_lua_script(struct img_type *img, void *data)
 
 }
 
- __attribute__((constructor))
-static void lua_handler(void)
+void lua_handler(void)
 {
 	register_handler("lua", start_lua_script, SCRIPT_HANDLER, NULL);
 }

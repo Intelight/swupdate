@@ -32,9 +32,9 @@
 #include "handler.h"
 #include "util.h"
 
-static void shell_handler(void);
-static void shell_preinstall_handler(void);
-static void shell_postinstall_handler(void);
+void shell_handler(void);
+void shell_preinstall_handler(void);
+void shell_postinstall_handler(void);
 
 static int execute_shell_script(struct img_type *img, const char *fnname)
 {
@@ -126,22 +126,19 @@ static int start_postinstall_script(struct img_type *img, void *data)
 	return execute_shell_script(img, "");
 }
 
- __attribute__((constructor))
-static void shell_handler(void)
+void shell_handler(void)
 {
 	register_handler("shellscript", start_shell_script,
 				SCRIPT_HANDLER, NULL);
 }
 
- __attribute__((constructor))
-static void shell_preinstall_handler(void)
+void shell_preinstall_handler(void)
 {
 	register_handler("preinstall", start_preinstall_script,
 				SCRIPT_HANDLER, NULL);
 }
 
- __attribute__((constructor))
-static void shell_postinstall_handler(void)
+void shell_postinstall_handler(void)
 {
 	register_handler("postinstall", start_postinstall_script,
 				SCRIPT_HANDLER, NULL);

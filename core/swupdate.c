@@ -583,6 +583,42 @@ int main(int argc, char **argv)
 	strcat(main_options, "K:");
 #endif
 
+#ifdef CONFIG_ARCHIVE
+	archive_handler();
+	untar_handler();
+#endif
+#ifdef CONFIG_CFI
+	flash_handler();
+#endif
+#ifdef CONFIG_RAW
+	raw_handler();
+	raw_filecopy_handler();
+#endif
+#ifdef CONFIG_UBIVOL
+	ubi_handler();
+#endif
+#ifdef CONFIG_CFIHAMMING1
+	flash_1bit_hamming_handler();
+#endif
+#ifdef CONFIG_LUASCRIPTHANDLER
+	lua_handler();
+#endif
+#ifdef CONFIG_SHELLSCRIPTHANDLER
+	shell_handler();
+	shell_preinstall_handler();
+	shell_postinstall_handler();	
+#endif
+#ifdef CONFIG_BOOTLOADERHANDLER
+	uboot_handler();
+	boot_handler();
+#endif
+#ifdef CONFIG_REMOTE_HANDLER
+	remote_handler();
+#endif
+#ifdef CONFIG_SWUFORWARDER_HANDLER
+	swuforward_handler();
+#endif
+
 	memset(fname, 0, sizeof(fname));
 
 	printf("%s\n", BANNER);

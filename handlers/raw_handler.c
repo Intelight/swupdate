@@ -103,14 +103,12 @@ static int install_raw_file(struct img_type *img,
 	return ret;
 }
 
-__attribute__((constructor))
 void raw_handler(void)
 {
 	register_handler("raw", install_raw_image,
 				IMAGE_HANDLER, NULL);
 }
 
-	__attribute__((constructor))
 void raw_filecopy_handler(void)
 {
 	register_handler("rawfile", install_raw_file,

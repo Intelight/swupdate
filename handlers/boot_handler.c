@@ -31,8 +31,8 @@
 #include "util.h"
 #include "bootloader.h"
 
-static void uboot_handler(void);
-static void boot_handler(void);
+void uboot_handler(void);
+void boot_handler(void);
 
 static int install_boot_environment(struct img_type *img,
 	void __attribute__ ((__unused__)) *data)
@@ -72,14 +72,12 @@ static int install_boot_environment(struct img_type *img,
 	return ret;
 }
 
-__attribute__((constructor))
-static void uboot_handler(void)
+void uboot_handler(void)
 {
 	register_handler("uboot", install_boot_environment,
 				BOOTLOADER_HANDLER, NULL);
 }
-__attribute__((constructor))
-static void boot_handler(void)
+void boot_handler(void)
 {
 	register_handler("bootloader", install_boot_environment,
 				BOOTLOADER_HANDLER, NULL);

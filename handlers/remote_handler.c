@@ -208,7 +208,6 @@ cleanup:
 	return ret;
 }
 
-__attribute__((constructor))
 void remote_handler(void)
 {
 	register_handler("remote", install_remote_image,
