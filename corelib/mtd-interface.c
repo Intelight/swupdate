@@ -95,14 +95,6 @@ int flash_erase(int mtdnum)
 			}
 		}
 
-		/* Unlock memory if required */
-		if (mtd_is_locked(mtd, fd, eb)) {
-			if (mtd_unlock(mtd, fd, eb) != 0) {
-				TRACE("%s: MTD unlock failure", mtd_device);
-				continue;
-			}
-		}
-
 		/*
 		 * In case of NOR flash, check if the flash
 		 * is already empty. This can save
