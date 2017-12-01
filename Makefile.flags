@@ -130,6 +130,10 @@ endif
 # json-c
 ifeq ($(CONFIG_JSON),y)
 LDLIBS += json-c
+ifeq ($(BR2_TOOLCHAIN_USES_UCLIBC),)
+# UCLIBC does not have __isnan and __isinf so link against libm
+LDLIBS += m
+endif
 endif
 
 # signed images require openssl (digest)
