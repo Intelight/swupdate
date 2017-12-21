@@ -55,7 +55,7 @@ int progress_ipc_connect(bool reconnect)
 		usleep(10000);
 	} while (true);
 
-	fprintf(stdout, "Connected to SWUpdate via %s\n", SOCKET_PROGRESS_PATH);
+	fprintf(stdout, "Connected via %s\n", SOCKET_PROGRESS_PATH);
 	return fd;
 }
 
