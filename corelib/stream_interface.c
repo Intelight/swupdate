@@ -318,7 +318,6 @@ void *network_initializer(void *data)
 		pthread_cond_wait(&stream_wkup, &stream_mutex);
 		inst.status = RUN;
 		pthread_mutex_unlock(&stream_mutex);
-		notify(START, RECOVERY_NO_ERROR, INFOLEVEL, "Software Update started !");
 
 #ifdef CONFIG_MTD
 		mtd_cleanup();
@@ -369,7 +368,6 @@ void *network_initializer(void *data)
 		inst.status = IDLE;
 		pthread_mutex_unlock(&stream_mutex);
 		TRACE("Main thread sleep again !");
-		notify(IDLE, RECOVERY_NO_ERROR, INFOLEVEL, "Waiting for requests...");
 
 		/* release temp files we may have created */
 		cleanup_files(software);

@@ -41,7 +41,7 @@ int progress_ipc_connect(bool reconnect)
 	servaddr.sun_family = AF_LOCAL;
 	strcpy(servaddr.sun_path, SOCKET_PROGRESS_PATH);
 
-	fprintf(stdout, "Trying to connect to SWUpdate...\n");
+	fprintf(stdout, "Starting SWUpdate...\n");
 
 	do {
 		if (connect(fd, (struct sockaddr *) &servaddr, sizeof(servaddr)) == 0) {
@@ -55,7 +55,6 @@ int progress_ipc_connect(bool reconnect)
 		usleep(10000);
 	} while (true);
 
-	fprintf(stdout, "Connected via %s\n", SOCKET_PROGRESS_PATH);
 	return fd;
 }
 
