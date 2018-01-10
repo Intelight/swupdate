@@ -50,14 +50,12 @@ static void usage(void) {
 	printf("swimage <image .swu to be installed>...\n");
 }
 
-char buf[256];
+char buf[1024];
 int fd;
 int complete = 0;
 int connfd;
 struct progress_msg msg;
 int curstep = 0;
-char bar[10];
-unsigned int filled_len;
 
 /*
  * this is the callback to get a new chunk of the
@@ -81,12 +79,11 @@ static int readimage(char **p, int *size) {
  * This is called by the library to inform
  * about the current status of the upgrade
  */
-static int printstatus(ipc_message *msg)
+static int printstatus(ipc_message *m)
 {
-	/*printf("Status: %d message: %s\n",
-		msg->data.status.current,
-		msg->data.status.desc ? msg->data.status.desc : "");*/
-
+	/*if(m->data.status.desc) {
+		printf("%s\n", m->data.status.desc);
+	}*/
 	return 0;
 }
 
@@ -132,15 +129,8 @@ static int send_file(const char* filename) {
 		if ((msg.cur_step != curstep) && (curstep != 0))
 			fprintf(stdout, "\n");
 
-		filled_len = sizeof(bar) * msg.cur_percent / 100;
-		if (filled_len > sizeof(bar))
-			filled_len = sizeof(bar);
-
-		memset(bar,'=', filled_len);
-		memset(&bar[filled_len], '-', sizeof(bar) - filled_len);
-
-		fprintf(stdout, "[%.10s] %3d%% %-20.20s\r",
-			bar, msg.cur_percent, msg.cur_image);
+		fprintf(stdout, "%-34.34s %3d%%\r",
+			msg.cur_image, msg.cur_percent);
 
 		if(msg.status == SUCCESS) {
 			fprintf(stdout, "\nSUCCESS !\n");
