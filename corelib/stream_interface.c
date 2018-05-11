@@ -215,6 +215,12 @@ static int extract_files(int fd, struct swupdate_cfg *software)
 					return -1;
 				}
 				close(fdout);
+				if(!strcmp(img->type, "preinstall")) {
+					if(execute_early_preinstall(software, img)) {
+						ERROR("stream preinstall err %s", img->fname);
+						return -1;
+					}
+				}
 				break;
 
 			case SKIP_FILE:

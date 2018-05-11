@@ -20,5 +20,6 @@ int install_images(struct swupdate_cfg *sw, int fdsw, int fromfile);
 int install_single_image(struct img_type *img);
 int postupdate(struct swupdate_cfg *swcfg, const char *info);
 void cleanup_files(struct swupdate_cfg *software);
+int execute_early_preinstall(struct swupdate_cfg *swcfg, struct img_type *script);
 
 #endif

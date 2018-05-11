@@ -460,3 +460,78 @@ int postupdate(struct swupdate_cfg *swcfg, const char *info)
 
 	return 0;
 }
+
+int execute_early_preinstall(struct swupdate_cfg *swcfg, struct img_type *script)
+{
+	int ret;
+	int fdin;
+	int fdout;
+	char *tmpfile;
+	unsigned long offset = 0;
+	uint32_t checksum;
+	struct img_type *img;
+	struct installer_handler *hnd;
+	const char* tmpdir_scripts = get_tmpdirscripts();
+
+	snprintf(script->extract_file, sizeof(script->extract_file), "%s%s",
+		 tmpdir_scripts , script->fname);
+
+	fdout = openfileoutput(script->extract_file);
+	if (fdout < 0)
+		return fdout;
+
+	if (asprintf(&tmpfile, "%s%s", get_tmpdir(), script->fname) ==
+		ENOMEM_ASPRINTF) {
+		ERROR("Path too long: %s%s", get_tmpdir(), script->fname);
+		close(fdout);
+		return -ENOMEM;
+	}
+
+	fdin = open(tmpfile, O_RDONLY);
+	free(tmpfile);
+	if (fdin < 0) {
+		ERROR("Extracted script not found in %s: %s %d\n",
+			get_tmpdir(), script->extract_file, errno);
+		return -ENOENT;
+	}
+
+	ret = copyfile(fdin, &fdout, script->size, &offset, 0, 0,
+			script->compressed,
+			&checksum,
+			script->sha256,
+			script->is_encrypted,
+			NULL);
+	close(fdin);
+	close(fdout);
+
+	hnd = find_handler(script);
+	if (!hnd) {
+		TRACE("Image Type %s not supported", script->type);
+		return -1;
+	}
+	TRACE("Found preinstall for stream %s %s", script->fname, hnd->desc);
+
+	swupdate_progress_inc_step(script->fname);
+
+	/* TODO : check callback to push results / progress */
+	script_fn fn = PREINSTALL;
+	ret = hnd->installer(script, &fn);
+
+	LIST_FOREACH(img, &swcfg->scripts, next) {
+		if(img == script) {
+			TRACE("cleanup preinstall %s\n", script->fname);
+			cleaup_img_entry(img);
+			LIST_REMOVE(img, next);
+			free_image(img);
+		}
+	}
+
+	if (ret != 0) {
+		TRACE("preinstall for %s not successful !",
+			hnd->desc);
+	}
+
+	swupdate_progress_step_completed();
+
+	return ret;
+}
